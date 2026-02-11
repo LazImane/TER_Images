@@ -1,0 +1,19 @@
+# Environnement virtuel
+venv/
+env/
+.venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+__pycache__/
+*.pyc
+
+# Dossier Complements et données
+Complements/
+TP1/Data_Project/
+
+#intelliJ
+.idea
+
+
