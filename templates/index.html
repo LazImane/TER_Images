@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TER Master 1 IA - Démo Application</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .nav-tabs { margin-bottom: 2rem; }
+        .preview-img { max-width: 100%; max-height: 400px; display: none; margin-top: 1rem; border-radius: 8px; }
+        .result-card { display: none; margin-top: 2rem; }
+        .placeholder-text { color: #6c757d; font-style: italic; }
+        .progress { height: 25px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary mb-4">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">TER Master 1 IA - Démo App</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="classif-tab" data-bs-toggle="tab" data-bs-target="#classif" type="button" role="tab">Classification</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="color-tab" data-bs-toggle="tab" data-bs-target="#color" type="button" role="tab">Colorisation</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="gen-tab" data-bs-toggle="tab" data-bs-target="#gen" type="button" role="tab">Génération</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- Onglet 1: Classification -->
+            <div class="tab-pane fade show active" id="classif" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Classification d'images</h3>
+                        <p class="text-muted">Le modèle reconnaît 3 classes : <strong>mouton, chat, éléphant</strong>.</p>
+                        <form id="classif-form">
+                            <div class="mb-3">
+                                <label for="classif-input" class="form-label">Uploader une image</label>
+                                <input class="form-control" type="file" id="classif-input" accept="image/*">
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="btn-classify">Prédire</button>
+                        </form>
+                        <img id="classif-preview" class="preview-img" alt="Aperçu">
+                    </div>
+                    <div class="col-md-6">
+                        <div id="classif-result" class="result-card card">
+                            <div class="card-body">
+                                <h4 class="card-title">Résultat : <span id="predicted-label" class="badge bg-success"></span></h4>
+                                <div id="warning-msg" class="alert alert-warning mt-3" style="display: none;"></div>
+                                <hr>
+                                <h5>Scores de confiance :</h5>
+                                <div id="scores-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Onglet 2: Colorisation -->
+            <div class="tab-pane fade" id="color" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Colorisation d'images</h3>
+                        <p class="text-muted">Uploadez une image en couleur ou N&B pour la coloriser.</p>
+                        <form id="color-form">
+                            <div class="mb-3">
+                                <label for="color-input" class="form-label">Uploader une image</label>
+                                <input class="form-control" type="file" id="color-input" accept="image/*" disabled>
+                            </div>
+                            <button type="button" class="btn btn-secondary" disabled>Coloriser (Indisponible)</button>
+                        </form>
+                        <div class="alert alert-warning mt-3">
+                            <strong>Modèle non disponible :</strong> L'autoencodeur de colorisation est en cours de développement.
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row text-center mt-4">
+                            <div class="col-6">
+                                <p class="small text-muted">Niveaux de gris</p>
+                                <div class="border p-4 bg-light d-flex align-items-center justify-content-center" style="height: 200px; border-style: dashed !important;">
+                                    <span class="text-muted">En attente</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <p class="small text-muted">Résultat colorisé</p>
+                                <div class="border p-4 bg-light d-flex align-items-center justify-content-center" style="height: 200px; border-style: dashed !important;">
+                                    <span class="text-muted">En attente</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Onglet 3: Génération -->
+            <div class="tab-pane fade" id="gen" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Génération d'images</h3>
+                        <p class="text-muted">Générez une image aléatoire à partir d'un vecteur latent via un VAE.</p>
+                        <button type="button" class="btn btn-secondary mb-3" disabled>Générer une nouvelle image</button>
+                        <div class="alert alert-warning">
+                            <strong>Modèle non disponible :</strong> Le décodeur VAE est en cours de développement.
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-center mt-4">
+                        <div class="border p-5 bg-light d-flex align-items-center justify-content-center mx-auto" style="max-width: 300px; height: 300px; border-style: dashed !important;">
+                            <span class="text-muted">Image générée indisponible</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Preview image
+        document.getElementById('classif-input').onchange = function (evt) {
+            const [file] = this.files;
+            if (file) {
+                const preview = document.getElementById('classif-preview');
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = 'block';
+                document.getElementById('classif-result').style.display = 'none';
+            }
+        };
+
+        // Handle Classification
+        document.getElementById('classif-form').onsubmit = async function(e) {
+            e.preventDefault();
+            const input = document.getElementById('classif-input');
+            if (!input.files[0]) return;
+
+            const btn = document.getElementById('btn-classify');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Analyse...';
+
+            const formData = new FormData();
+            formData.append('image', input.files[0]);
+
+            try {
+                const response = await fetch('/classify', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    document.getElementById('predicted-label').textContent = data.label.toUpperCase();
+                    
+                    const warning = document.getElementById('warning-msg');
+                    if (data.warning) {
+                        warning.textContent = data.warning;
+                        warning.style.display = 'block';
+                    } else {
+                        warning.style.display = 'none';
+                    }
+
+                    const scoresContainer = document.getElementById('scores-container');
+                    scoresContainer.innerHTML = '';
+                    
+                    for (const [label, score] of Object.entries(data.scores)) {
+                        const percent = (score * 100).toFixed(1);
+                        scoresContainer.innerHTML += `
+                            <div class="mb-2">
+                                <small>${label}</small>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: ${percent}%">${percent}%</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    document.getElementById('classif-result').style.display = 'block';
+                }
+            } catch (err) {
+                alert("Erreur lors de la classification");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Prédire';
+            }
+        };
+    </script>
+</body>
+</html>
