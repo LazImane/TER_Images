@@ -18,7 +18,7 @@ Cette application Flask regroupe trois fonctionnalités majeures d'Intelligence 
 
 ### 3. Génération d'Images (VAE)
 - **Description** : Génération de nouvelles images de chats à partir d'un espace latent.
-- **Modèle** : Variational AutoEncoder (`catGeneratingVAE.keras`).
+- **Modèle** : Variational AutoEncoder (`catGeneratingVAE2.keras`).
 - **Processus** : Échantillonnage d'un vecteur latent aléatoire (taille 16) passé au décodeur du VAE.
 
 ## Installation
