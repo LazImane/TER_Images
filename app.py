@@ -101,7 +101,7 @@ class ImageColorizer:
 
 class ImageGenerator:
     def __init__(self):
-        model_path = os.path.join('models', 'catGeneratingVAE.keras')
+        model_path = os.path.join('models', 'catGeneratingVAE2.keras')
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Le modèle {model_path} est introuvable.")
         
