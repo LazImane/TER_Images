@@ -69,30 +69,29 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h3>Colorisation d'images</h3>
-                        <p class="text-muted">Uploadez une image en couleur ou N&B pour la coloriser.</p>
+                        <p class="text-muted">Uploadez une image (elle sera convertie en N&B puis colorisée).</p>
                         <form id="color-form">
                             <div class="mb-3">
                                 <label for="color-input" class="form-label">Uploader une image</label>
-                                <input class="form-control" type="file" id="color-input" accept="image/*" disabled>
+                                <input class="form-control" type="file" id="color-input" accept="image/*">
                             </div>
-                            <button type="button" class="btn btn-secondary" disabled>Coloriser (Indisponible)</button>
+                            <button type="submit" class="btn btn-primary" id="btn-colorize">Coloriser</button>
                         </form>
-                        <div class="alert alert-warning mt-3">
-                            <strong>Modèle non disponible :</strong> L'autoencodeur de colorisation est en cours de développement.
-                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row text-center mt-4">
                             <div class="col-6">
-                                <p class="small text-muted">Niveaux de gris</p>
-                                <div class="border p-4 bg-light d-flex align-items-center justify-content-center" style="height: 200px; border-style: dashed !important;">
-                                    <span class="text-muted">En attente</span>
+                                <p class="small text-muted">Entrée (N&B)</p>
+                                <div id="gray-container" class="border p-1 bg-light d-flex align-items-center justify-content-center" style="min-height: 200px; border-style: dashed !important;">
+                                    <img id="gray-preview" style="max-width: 100%; display: none;" alt="Gris">
+                                    <span class="text-muted" id="gray-placeholder">En attente</span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <p class="small text-muted">Résultat colorisé</p>
-                                <div class="border p-4 bg-light d-flex align-items-center justify-content-center" style="height: 200px; border-style: dashed !important;">
-                                    <span class="text-muted">En attente</span>
+                                <div id="color-container" class="border p-1 bg-light d-flex align-items-center justify-content-center" style="min-height: 200px; border-style: dashed !important;">
+                                    <img id="color-result" style="max-width: 100%; display: none;" alt="Colorisé">
+                                    <span class="text-muted" id="color-placeholder">En attente</span>
                                 </div>
                             </div>
                         </div>
@@ -105,15 +104,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h3>Génération d'images</h3>
-                        <p class="text-muted">Générez une image aléatoire à partir d'un vecteur latent via un VAE.</p>
-                        <button type="button" class="btn btn-secondary mb-3" disabled>Générer une nouvelle image</button>
-                        <div class="alert alert-warning">
-                            <strong>Modèle non disponible :</strong> Le décodeur VAE est en cours de développement.
-                        </div>
+                        <p class="text-muted">Générez une image aléatoire (chat) à partir d'un vecteur latent via votre VAE.</p>
+                        <button type="button" class="btn btn-primary mb-3" id="btn-generate">Générer une nouvelle image</button>
                     </div>
                     <div class="col-md-6 text-center mt-4">
-                        <div class="border p-5 bg-light d-flex align-items-center justify-content-center mx-auto" style="max-width: 300px; height: 300px; border-style: dashed !important;">
-                            <span class="text-muted">Image générée indisponible</span>
+                        <div id="gen-container" class="border p-2 bg-light d-flex align-items-center justify-content-center mx-auto" style="max-width: 300px; min-height: 300px; border-style: dashed !important;">
+                            <img id="gen-result" style="max-width: 100%; display: none;" alt="Généré">
+                            <span class="text-muted" id="gen-placeholder">Image générée apparaîtra ici</span>
                         </div>
                     </div>
                 </div>
@@ -188,6 +185,76 @@
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = 'Prédire';
+            }
+        };
+
+        // Handle Colorization
+        document.getElementById('color-form').onsubmit = async function(e) {
+            e.preventDefault();
+            const input = document.getElementById('color-input');
+            if (!input.files[0]) return;
+
+            const btn = document.getElementById('btn-colorize');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Traitement...';
+
+            const formData = new FormData();
+            formData.append('image', input.files[0]);
+
+            try {
+                const response = await fetch('/colorize', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    const grayPreview = document.getElementById('gray-preview');
+                    const colorResult = document.getElementById('color-result');
+                    
+                    grayPreview.src = 'data:image/png;base64,' + data.original;
+                    grayPreview.style.display = 'block';
+                    document.getElementById('gray-placeholder').style.display = 'none';
+                    
+                    colorResult.src = 'data:image/png;base64,' + data.colorized;
+                    colorResult.style.display = 'block';
+                    document.getElementById('color-placeholder').style.display = 'none';
+                }
+            } catch (err) {
+                alert("Erreur lors de la colorisation");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Coloriser';
+            }
+        };
+
+        // Handle Generation
+        document.getElementById('btn-generate').onclick = async function() {
+            const btn = this;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Génération...';
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    const genResult = document.getElementById('gen-result');
+                    genResult.src = 'data:image/png;base64,' + data.image;
+                    genResult.style.display = 'block';
+                    document.getElementById('gen-placeholder').style.display = 'none';
+                }
+            } catch (err) {
+                alert("Erreur lors de la génération");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Générer une nouvelle image';
             }
         };
     </script>

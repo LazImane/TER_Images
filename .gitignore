@@ -3,6 +3,5 @@ __pycache__/
 *.pyc
 static/uploads/*
 !static/uploads/.gitkeep
-models/modele_finetuning.keras
 .env
 .DS_Store
