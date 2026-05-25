@@ -74,8 +74,7 @@ Ces trois notebooks, lus dans l'ordre, reflètent exactement la progression déc
 
 | Fichier | Description |
 |--------|-------------|
-| [Generation images.pdf](https://github.com/LazImane/TER_Images/blob/main/3.Generation%20avec%20les%20VAE/Generation%20images.pdf) | Premières expérimentations avec l'autoencodeur classique pour la génération - illustration des limites de l'espace latent non structuré (Section 5.1 du rapport). |
-| [Generating cat images1.pdf](https://github.com/LazImane/TER_Images/blob/main/3.Generation%20avec%20les%20VAE/Generating%20cat%20images1.pdf) | **Notebook principal VAE** - Implémentation complète du VAE, visualisation de l'espace latent (t-SNE), et génération d'images de chats. Contient tous les résultats rapportés dans les Sections 5.2 à 5.4 du rapport. |
+| [Generation images.pdf](https://github.com/LazImane/TER_Images/blob/main/3.Generation%20avec%20les%20VAE/Generation%20images.pdf) | **Notebook principal VAE** - Implémentation complète du VAE, visualisation de l'espace latent (t-SNE), et génération d'images de chats. Contient tous les résultats rapportés dans la Sections 5 du rapport. |
 
 ---
 
