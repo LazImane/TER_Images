@@ -8,7 +8,7 @@ Encadrant : M. Pascal Poncelet
 
 ## Rapport & Application
 
-- Rapport final (PDF) : disponible dans le dossier [`rapports/`](./rapports/)
+- Rapport final (PDF) : [rapport_ter_final.pdf](https://github.com/LazImane/TER_Images/blob/main/rapports/rapport_ter_final.pdf)
 - Rapport rédigé sur : [PLMLaTeX](https://plmlatex.math.cnrs.fr/project/699741cebef35e808a2ad6e9)
 - Application web : voir la branche [`application`](https://github.com/LazImane/TER_Images/tree/application) - elle contient son propre README pour l'installation
 
@@ -91,6 +91,6 @@ progression dans l'apprentissage.
 
 | Ressource | Lien |
 |-----------|------|
-| Rapport final | [`rapports/`](./rapports/) |
+| Rapport final | [rapport_ter_final.pdf](https://github.com/LazImane/TER_Images/blob/main/rapports/rapport_ter_final.pdf) |
 | Rapport PLMLaTeX | [Accéder](https://plmlatex.math.cnrs.fr/project/699741cebef35e808a2ad6e9) |
 | Application web | [Branche `application`](https://github.com/LazImane/TER_Images/tree/application) |
